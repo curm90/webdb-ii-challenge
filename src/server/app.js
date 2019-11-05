@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 
-const carsRouter = require('./src/routers/carsRouter');
+const carsRouter = require('../routers/carsRouter');
 
 const app = express();
 
@@ -12,6 +12,6 @@ app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
-app.use('./cars', carsRouter);
+app.use('/cars', carsRouter);
 
 module.exports = app;
