@@ -1,6 +1,8 @@
 const express = require('express');
 const Cars = require('../helpers/carsModel');
 
+const { validateCar, validateCarId } = require('../middleware');
+
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
@@ -12,7 +14,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', validateCarId, async (req, res, next) => {
   try {
     const car = await Cars.getById(req.params.id);
     res.status(200).json(car);
@@ -21,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', validateCar, async (req, res, next) => {
   try {
     const { vin, make, model, mileage, transmission, status } = req.body;
     const newCar = await Cars.insert({
@@ -38,7 +40,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', [validateCarId, validateCar], async (req, res, next) => {
   try {
     const { vin, make, model, mileage, transmission, status } = req.body;
     const { id } = req.params;
@@ -58,7 +60,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateCarId, async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedCar = await Cars.remove(id);
