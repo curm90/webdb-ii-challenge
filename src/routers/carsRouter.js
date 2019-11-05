@@ -23,14 +23,48 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { vin, make, model, mileage } = req.body;
+    const { vin, make, model, mileage, transmission, status } = req.body;
     const newCar = await Cars.insert({
       vin,
       make,
       model,
-      mileage
+      mileage,
+      transmission,
+      status
     });
     res.status(201).json(newCar);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { vin, make, model, mileage, transmission, status } = req.body;
+    const { id } = req.params;
+    const updatedCar = await Cars.update(id, {
+      vin,
+      make,
+      model,
+      mileage,
+      transmission,
+      status
+    });
+    res
+      .status(200)
+      .json({ message: `${updatedCar} car got updated successfully` });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedCar = await Cars.remove(id);
+    res
+      .status(200)
+      .json({ message: `${deletedCar} car was removed successfully` });
   } catch (error) {
     next(error);
   }
