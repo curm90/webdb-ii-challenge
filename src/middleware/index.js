@@ -1,15 +1,12 @@
 const Cars = require('../helpers/carsModel');
 
 function validateCarId(req, res, next) {
-  Cars.get()
-    .then(cars => {
-      const { id } = req.params;
-      if (cars.find(car => car.id !== id)) {
-        res
-          .status(404)
-          .json({ message: `Car with the id of ${id} does not exist.` });
+  Cars.getById(req.params.id)
+    .then(car => {
+      if (!car) {
+        res.status(404).json({ message: `Car does not exist.` });
       } else {
-        req.cars = cars;
+        req.car = car;
         next();
       }
     })
